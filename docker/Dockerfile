@@ -27,7 +27,7 @@ VOLUME /etc/logstash/conf.d
 RUN  mkdir -p /etc/logstash/conf.d/
 
 WORKDIR ${HOME}
-ADD run.sh /usr/sbin/
-CMD /usr/sbin/run.sh
+ADD run.sh /usr/bin/
 
-
+USER 1001
+CMD /usr/bin/run.sh

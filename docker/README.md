@@ -1,4 +1,4 @@
-# docker-logstash
+# Logstash docker image
 ViaQ Logstash docker container - implements the aggregator/formatter
 
 ## Environmental variables:
@@ -15,5 +15,3 @@ In case `fluent.conf` exists, the default `config.d/*.conf` is removed and not u
 ## Running:
 * Specify the environmental variables
 * execute `run-container.sh`
-
-

@@ -1,0 +1,22 @@
+---
+- name: "check for existence of Logstash project"
+  shell: oc get project {{ logstash_project }} || true
+  register: project_exists
+
+- name: "Create Logstash project"
+  command: oc new-project {{ logstash_project }}
+  when: "'Error' in project_exists.stderr"
+
+- name: "Go to Logstash project"
+  command: oc project {{ logstash_project }}
+
+- name: "Copy Logstash infrastructure template to the remote"
+  template: src=logstash-template.yaml.j2 dest=/tmp/logstash-template.yaml
+
+- name: "Create Lgstash infrastructure template"
+  shell: oc create -f /tmp/logstash-template.yaml
+  register: template_output
+  failed_when: "template_output.rc == 1 and 'exists' not in template2_output.stderr"
+
+- name: "Process Logstash infra template and create objects"
+  shell: "oc process logstash-template | oc create -f - "

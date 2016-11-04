@@ -1,0 +1,71 @@
+apiVersion: "v1"
+kind: "List"
+items:
+-
+  apiVersion: "v1"
+  kind: "Template"
+  metadata:
+    name: logstash-template
+    labels:
+      logstash: infra
+    annotations:
+      description: "Template for creating infrastructure for logstash objects."
+  objects:
+  - apiVersion: v1
+    kind: "Service"
+    metadata:
+      name: "logstash"
+      labels:
+        app: logstash
+    spec:
+      selector:
+        component: logstash-agent
+      ports:
+      - protocol: TCP
+        targetPort: 9999
+        port: 9999
+  - apiVersion: v1
+    kind: "DeploymentConfig"
+    metadata:
+      name: "logstash"
+      labels:
+        app: logstash
+        component: logstash-agent
+    spec:
+      replicas: 1
+      updateStrategy:
+        type: RollingUpdate
+        rollingUpdate:
+          minReadySeconds: 600
+      template:
+        metadata:
+          name: logstash
+          labels:
+            app: logstash
+            component: "logstash-agent"
+        spec:
+          terminationGracePeriodSeconds: 30
+          containers:
+          - name: logstash
+            image: ${IMAGE_PREFIX}logstash:${IMAGE_VERSION}
+            imagePullPolicy: Always
+            resources:
+              limits:
+                cpu: 100m
+            volumeMounts:
+            - name: config
+              mountPath: /etc/logstash/conf.d
+              readOnly: true
+          volumes:
+          - name: config
+            configMap:
+              name: logstash-config
+  parameters:
+  -
+    description: "The prefix of the image to use."
+    name: IMAGE_PREFIX
+    value: "t0ffel/"
+  -
+    description: "The version tag of the image to use."
+    name: IMAGE_VERSION
+    value: latest

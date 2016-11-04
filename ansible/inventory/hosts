@@ -1,0 +1,6 @@
+[nodes]
+localhost
+
+[nodes:vars]
+logstash_project=shipshift-sample-platform-rhci
+ansible_connection=local

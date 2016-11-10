@@ -1,19 +1,15 @@
-# docker-logstash
-ViaQ Logstash docker container - implements the aggregator/formatter
+# Containerized Logstash
 
-## Environmental variables:
-`ES_HOST` must be FQDN of ElasticSearch server.  
-`ES_PORT` must be the port on which the ElasticSearch server is listening.  
-`LISTEN_PORT` the port this rsyslog instance is listening for. both TCP and UDP.  
+The repository contains various versions of containerized Logstash.
 
-## External Logstash config
-In order to add own Fluentd configuration file please add the configuration files to a local directory and map in to `/data` docker volume.  
-The following files are taken form the local directory:  
-`fluent.conf, config.d/*, patterns.d/*`  
-In case `fluent.conf` exists, the default `config.d/*.conf` is removed and not used in the container.
+## Dockerized Logstash
 
-## Running:
-* Specify the environmental variables
-* execute `run-container.sh`
+docker version of Logstash along with the instructions on how to use it can be
+found in the [docker](docker) directory.
 
+## Logstash on OpenShift/Kubernetes
 
+Lostash on [OpenShift](https://www.openshift.org) or Kubernetes is an Ansible
+role that deploys Logstash as pods/services with external configuration in a
+specified Kubernetes `namespace`.
+See [ansible](ansible) folder for details.

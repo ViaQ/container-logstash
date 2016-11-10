@@ -1,0 +1,17 @@
+---
+- name: "Go to logstash project"
+  command: "oc project {{ logstash_project }}"
+
+- name: delete old configmaps
+  shell: "oc delete configmap logstash-config|| true"
+
+- name: "Copy logstash client configs to the remote"
+  copy: src={{ item }} dest=/tmp/conf.d/
+  with_fileglob:
+  - "{{ role_path }}/files/conf.d/*"
+
+- name: "Create logstash client config configMaps"
+  command: "oc create configmap logstash-config --from-file=/tmp/conf.d"
+
+#- name: "Deploy new Logstash"
+#  command: "oc deploy logstash --latest"

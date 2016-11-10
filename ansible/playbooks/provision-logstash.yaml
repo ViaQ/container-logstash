@@ -1,0 +1,5 @@
+---
+- name: Deploy Logstash
+  hosts: nodes
+  roles:
+  - logstash-openshift

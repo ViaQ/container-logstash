@@ -56,6 +56,9 @@ items:
             - name: config
               mountPath: /etc/logstash/conf.d
               readOnly: true
+            env:
+            - name: "DEBUG_LOGSTASH"
+              value: ${DEBUG}
           volumes:
           - name: config
             configMap:
@@ -69,3 +72,7 @@ items:
     description: "The version tag of the image to use."
     name: IMAGE_VERSION
     value: latest
+  -
+    description: "Debug version of Logstash."
+    name: DEBUG
+    value: "{{ debug }}"

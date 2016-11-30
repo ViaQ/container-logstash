@@ -33,10 +33,13 @@ items:
         component: logstash-agent
     spec:
       replicas: 1
+      strategy:
+        rollingParams:
+          timeoutSeconds: 1200
       updateStrategy:
         type: RollingUpdate
         rollingUpdate:
-          minReadySeconds: 600
+          minReadySeconds: 1200
       template:
         metadata:
           name: logstash
@@ -48,6 +51,12 @@ items:
           containers:
           - name: logstash
             image: ${IMAGE_PREFIX}logstash:${IMAGE_VERSION}
+#            readinessProbe:
+#              httpGet:
+#                path: /
+#                port: 9600
+#              initialDelaySeconds: 1200
+#              timeoutSeconds: 1
             imagePullPolicy: Always
             resources:
               limits:
@@ -56,6 +65,9 @@ items:
             - name: config
               mountPath: /etc/logstash/conf.d
               readOnly: true
+            - name: patterns
+              mountPath: /etc/logstash/patterns.d
+              readOnly: true
             env:
             - name: "DEBUG_LOGSTASH"
               value: ${DEBUG}
@@ -63,6 +75,9 @@ items:
           - name: config
             configMap:
               name: logstash-config
+          - name: patterns
+            configMap:
+              name: logstash-patterns
   parameters:
   -
     description: "The prefix of the image to use."

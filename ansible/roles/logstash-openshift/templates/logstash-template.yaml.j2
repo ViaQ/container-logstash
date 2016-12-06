@@ -60,7 +60,8 @@ items:
             imagePullPolicy: Always
             resources:
               limits:
-                cpu: 100m
+                cpu: 800m
+                memory: 1Gi
             volumeMounts:
             - name: config
               mountPath: /etc/logstash/conf.d

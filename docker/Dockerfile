@@ -2,7 +2,7 @@ FROM centos:centos7
 MAINTAINER The ViaQ Community <community@TBA>
 
 
-ENV HOME=/opt/app-root/src \
+ENV HOME=/opt/app-root/ \
     PATH=/opt/app-root/src/bin:/opt/app-root/bin:$PATH \
     JAVA_HOME=/usr/lib/jvm/jre
 
@@ -13,21 +13,26 @@ ADD logstash.repo /etc/yum.repos.d/logstash.repo
 
 RUN yum update -y --setopt=tsflags=nodocs \
     && \
-    yum install -y --setopt=tsflags=nodocs java-1.8.0-openjdk \
+    yum install -y --setopt=tsflags=nodocs java-1.8.0-openjdk-headless \
     && \
     yum install -y --setopt=tsflags=nodocs \
         logstash \
     && \
     yum -y autoremove \
     && \
-    yum clean all
+    yum clean all \
+    && \
+    /usr/share/logstash/bin/logstash-plugin install logstash-filter-translate
 
 VOLUME /etc/logstash/conf.d
 
-RUN  mkdir -p /etc/logstash/conf.d/
+RUN  mkdir -p /etc/logstash/conf.d/ \
+     && \
+     chmod 775 ${HOME}
 
 WORKDIR ${HOME}
 ADD run.sh /usr/bin/
 
 USER 1001
+
 CMD /usr/bin/run.sh

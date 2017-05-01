@@ -4,7 +4,9 @@ MAINTAINER The ViaQ Community <community@TBA>
 
 ENV HOME=/opt/app-root/ \
     PATH=/opt/app-root/src/bin:/opt/app-root/bin:$PATH \
-    JAVA_HOME=/usr/lib/jvm/jre
+    LOGSTASH_VER=5.3.2 \
+    JAVA_HOME=/usr/lib/jvm/jre \
+    LS_HEAP_SIZE=512m
 
 RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 && \
     rpmkeys --import https://packages.elastic.co/GPG-KEY-elasticsearch

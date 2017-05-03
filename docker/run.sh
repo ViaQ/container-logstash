@@ -28,5 +28,5 @@ else
     LOGSTASH_ARGS=""
 fi
 
-/usr/share/logstash/bin/logstash ${LOGSTASH_ARGS} --http.host "0.0.0.0" --log.format json --path.config /etc/logstash/conf.d/ --path.data /opt/app-root/
+/usr/share/logstash/bin/logstash ${LOGSTASH_ARGS} --http.host "0.0.0.0" --log.format json --path.settings /etc/logstash/
 

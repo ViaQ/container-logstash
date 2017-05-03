@@ -6,7 +6,8 @@ ENV HOME=/opt/app-root/ \
     PATH=/opt/app-root/src/bin:/opt/app-root/bin:$PATH \
     LOGSTASH_VER=5.3.2 \
     JAVA_HOME=/usr/lib/jvm/jre \
-    LS_HEAP_SIZE=512m
+    LS_HEAP_SIZE=512m \
+	INSTANCE_RAM=4G
 
 RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 && \
     rpmkeys --import https://packages.elastic.co/GPG-KEY-elasticsearch
@@ -34,6 +35,7 @@ RUN  mkdir -p /etc/logstash/conf.d/ \
 
 WORKDIR ${HOME}
 ADD run.sh /usr/bin/
+ADD logstash.yml log4j2.properties /etc/logstash/
 
 USER 1001
 

@@ -3,7 +3,7 @@
   command: oc project {{ logstash_project }}
 
 - name: delete items
-  shell: "oc delete {{ item }} || true"
+  shell: "oc delete {{ item }}  -n {{ logstash_project }}|| true"
   with_items:
   - all --selector app=logstash
   - templates logstash-template

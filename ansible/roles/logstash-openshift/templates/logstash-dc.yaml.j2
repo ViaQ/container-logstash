@@ -43,9 +43,13 @@ spec:
         - name: patterns
           mountPath: /etc/logstash/patterns.d
           readOnly: true
+        - name: queue
+          mountPath: /opt/queue
         env:
         - name: "DEBUG_LOGSTASH"
-          value: {{ debug }}
+          value: "{{ debug }}"
+        - name: "INSTANCE_RAM"
+          value: "1G"
       volumes:
       - name: config
         configMap:
@@ -53,3 +57,6 @@ spec:
       - name: patterns
         configMap:
           name: logstash-patterns
+      - name: queue
+        persistentVolumeClaim:
+          claimName: logstash-queue

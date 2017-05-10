@@ -11,10 +11,10 @@
   - "{{ role_path }}/files/conf.d/*"
 
 - name: "Create logstash client config configMaps"
-  command: "oc create configmap logstash-config --from-file=/tmp/conf.d"
+  command: "oc create configmap logstash-config --from-file=/tmp/conf.d -n {{ logstash_project }}"
 
 - name: delete old pattenrs
-  shell: "oc delete configmap logstash-patterns|| true"
+  shell: "oc delete configmap logstash-patterns  -n {{ logstash_project }}|| true"
 
 - name: "Copy logstash patterns to the remote"
   copy: src={{ item }} dest=/tmp/patterns.d/
@@ -22,7 +22,7 @@
   - "{{ role_path }}/files/patterns.d/*"
 
 - name: "Create logstash patterns configMaps"
-  command: "oc create configmap logstash-patterns --from-file=/tmp/patterns.d"
+  command: "oc create configmap logstash-patterns --from-file=/tmp/patterns.d  -n {{ logstash_project }}"
 
 #- name: "Deploy new Logstash"
 #  command: "oc deploy logstash --latest"

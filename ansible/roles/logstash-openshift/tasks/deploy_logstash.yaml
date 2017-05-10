@@ -1,4 +1,11 @@
 ---
+# Set up PVC for persistent queue
+- name: "Copy Queue PVC declaration to the remote"
+  template: src=queue.pvc.j2 dest=/tmp/queue.pvc.yaml
+
+- name: "Create Queue PVC"
+  shell: oc apply -f /tmp/queue.pvc.yaml  -n {{ logstash_project }}
+
 - name: "Copy Logstash infrastructure template to the remote"
   template: src={{ item }}.j2 dest=/tmp/{{ item }}
   with_items:
@@ -6,7 +13,7 @@
   - logstash-dc.yaml
 
 - name: "Create Logstash infrastructure template"
-  shell: oc apply -f /tmp/{{ item }}
+  shell: oc apply -f /tmp/{{ item }}  -n {{ logstash_project }}
   with_items:
   - logstash-service.yaml
   - logstash-dc.yaml

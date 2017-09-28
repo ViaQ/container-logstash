@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "logstash"
+  name: "{{ job_name }}"
   labels:
     app: logstash
     component: logstash-agent
@@ -40,7 +40,9 @@ spec:
 {% endif %}
         env:
         - name: "DEBUG_LOGSTASH"
-          value: {{ debug }}
+          value: "{{ debug }}"
+      restartPolicy: OnFailure
+      schedulerName: default-scheduler
       volumes:
       - name: config
         configMap:

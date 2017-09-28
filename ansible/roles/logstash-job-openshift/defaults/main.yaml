@@ -9,6 +9,7 @@ index_shipshift: "jenkins-staging2-logs"
 index_collectd: "collectd"
 index_log4j: "logstash"
 index_lumberjack: "logstash"
+job_name: logstash-job-1
 
 configs_dir: "{{ role_path }}/files/"
 # Define certs_dir to add certificates to the job

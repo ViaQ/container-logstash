@@ -4,9 +4,6 @@
   when:
   - not logstash_deploy | default(true) | bool
 
-- debug:
-    vars: logstash_deploy
-
 - name: "Deploy Logstash infrastructure"
   include: "{{ role_path }}/tasks/deploy_logstash.yaml"
   when:

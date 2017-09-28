@@ -4,5 +4,7 @@
   roles:
   - role: logstash-job-openshift
     debug: "true"
-    configs_dir: "{{ role_path }}/files/"
+    configs_dir: "{{ inventory_dir }}/../logstash-configs/"
     logstash_project: test-anton
+    kubeconfig: /home/centos/.kube/config
+    job_name: job-1

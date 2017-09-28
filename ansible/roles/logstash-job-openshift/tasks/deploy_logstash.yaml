@@ -9,9 +9,6 @@
   register: mktemp
   changed_when: False
 
-- debug:
-    var: tempdir
-
 - set_fact:
     tempdir: "{{ mktemp.stdout }}"
 
@@ -39,9 +36,6 @@
   with_fileglob:
   - "{{ configs_dir }}/conf.d/*"
   changed_when: no
-
-- debug:
-    vars: tempdir
 
 - name: Set Logstash client configmaps
   oc_configmap:

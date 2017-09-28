@@ -1,0 +1,18 @@
+galaxy_info:
+  author: Anton Sherkhonov
+  description: Deployment and configuration of Logstash job on OpenShift
+  company: Red Hat, Inc.
+
+  license: Apache
+
+  min_ansible_version: 2.1
+
+  galaxy_tags: []
+    #       Maximum 20 tags per role.
+  platforms:
+  - name: Fedora
+    versions:
+    - 25
+
+dependencies:
+- role: lib_openshift

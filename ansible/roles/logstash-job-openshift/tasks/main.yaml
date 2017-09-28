@@ -1,0 +1,13 @@
+---
+- name: Cleanup Logstash deployment
+  include: "{{ role_path }}/tasks/cleanup_logstash.yaml"
+  when:
+  - not logstash_deploy | default(true) | bool
+
+- debug:
+    vars: logstash_deploy
+
+- name: "Deploy Logstash infrastructure"
+  include: "{{ role_path }}/tasks/deploy_logstash.yaml"
+  when:
+  - logstash_deploy| default(true) | bool

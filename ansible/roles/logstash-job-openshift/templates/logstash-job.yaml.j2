@@ -1,0 +1,61 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "logstash"
+  labels:
+    app: logstash
+    component: logstash-agent
+spec:
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      name: logstash
+      labels:
+        app: logstash
+        component: "logstash-agent"
+    spec:
+      containers:
+      - name: logstash
+        image: {{ logstash_image }}
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 800m
+            memory: 1Gi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/logstash/conf.d
+          readOnly: true
+        - name: patterns
+          mountPath: /etc/logstash/patterns.d
+          readOnly: true
+        - name: logstash-queue
+          mountPath: /opt/queue
+{% if certs_dir is defined %}
+        - name: logstash-certs
+          mountPath: /etc/pki/tls/certs/
+        - name: logstash-certs-keys
+          mountPath: /etc/pki/tls/private/
+{% endif %}
+        env:
+        - name: "DEBUG_LOGSTASH"
+          value: {{ debug }}
+      volumes:
+      - name: config
+        configMap:
+          name: logstash-config
+      - name: patterns
+        configMap:
+          name: logstash-patterns
+      - name: logstash-queue
+        persistentVolumeClaim:
+          claimName: logstash-queue
+{% if certs_dir is defined %}
+      - name: logstash-certs
+        secret:
+          secretName: logstash-certs
+      - name: logstash-certs-keys
+        secret:
+          secretName: logstash-certs-keys
+{% endif %}

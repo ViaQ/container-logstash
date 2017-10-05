@@ -7,6 +7,3 @@
   include: "{{ role_path }}/tasks/deploy_logstash.yaml"
   when: logstash_deploy| default(true) | bool
 
-- name: Configure Logstash
-  include: "{{ role_path }}/tasks/configure_logstash.yaml"
-  when: logstash_deploy | default(true) | bool

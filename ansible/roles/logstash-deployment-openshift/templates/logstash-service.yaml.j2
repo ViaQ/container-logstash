@@ -1,12 +1,14 @@
 apiVersion: v1
 kind: "Service"
 metadata:
-  name: "logstash"
+  name: {{ logstash_name }}-logstash
   labels:
     app: logstash
+    logstash-name: {{ logstash_name }}
 spec:
   selector:
-    component: logstash-agent
+    app: logstash
+    logstash-name: {{ logstash_name }}
   ports:
   - protocol: TCP
     targetPort: 9999

@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   annotations:
     volume.beta.kubernetes.io/storage-class: slow
-  name: logstash-queue
+  name: {{ logstash_name }}-logstash-queue
 spec:
   accessModes:
   - ReadWriteMany

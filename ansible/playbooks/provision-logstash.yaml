@@ -2,5 +2,11 @@
 - name: Deploy Logstash
   hosts: nodes
   roles:
-  - role: logstash-openshift
+  - role: logstash-deployment-openshift
     debug: "true"
+    logstash_project: centosci-kafka-mirror
+    logstash_name: fedmsg
+    configs_dir: "{{ role_path }}/files/"
+    kubeconfig: /home/centos/.kube/config
+    index_shipshift: fedmsg-prod
+    production_elasticsearch: "http://elasticsearch.perf.lab.eng.bos.redhat.com:80"

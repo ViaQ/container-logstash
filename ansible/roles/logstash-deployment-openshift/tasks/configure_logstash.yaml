@@ -1,28 +1,41 @@
 ---
-- name: "Go to logstash project"
-  command: "oc project {{ logstash_project }}"
-
-- name: delete old configmaps
-  shell: "oc delete configmap logstash-config|| true"
+- name: Create temp directory for configs
+  file:
+    path: '{{ tempdir }}/conf.d/'
+    state: directory
+    mode: 0755
 
 - name: "Copy logstash client configs to the remote"
-  copy: src={{ item }} dest=/tmp/conf.d/
+  template:
+    src: '{{ item }}'
+    dest: '{{ tempdir }}/conf.d/'
   with_fileglob:
-  - "{{ role_path }}/files/conf.d/*"
+  - "{{ configs_dir }}/conf.d/*"
+  changed_when: no
 
-- name: "Create logstash client config configMaps"
-  command: "oc create configmap logstash-config --from-file=/tmp/conf.d -n {{ logstash_project }}"
+- name: Set Logstash client configmaps
+  oc_configmap:
+    state: present
+    name: '{{ logstash_name }}-logstash-config'
+    namespace: "{{ logstash_project }}"
+    kubeconfig: '{{ kubeconfig }}'
+    from_dir: '{{ tempdir }}/conf.d/'
 
-- name: delete old pattenrs
-  shell: "oc delete configmap logstash-patterns  -n {{ logstash_project }}|| true"
-
+# Logstash patterns.d configmap
 - name: "Copy logstash patterns to the remote"
-  copy: src={{ item }} dest=/tmp/patterns.d/
+  copy:
+    src: '{{ item }}'
+    dest: '{{ tempdir }}/patterns.d/'
   with_fileglob:
-  - "{{ role_path }}/files/patterns.d/*"
+  - "{{ configs_dir }}/patterns.d/*"
+  changed_when: no
 
-- name: "Create logstash patterns configMaps"
-  command: "oc create configmap logstash-patterns --from-file=/tmp/patterns.d  -n {{ logstash_project }}"
+- name: Set Logstash client patterns
+  oc_configmap:
+    state: present
+    name: '{{ logstash_name }}-logstash-patterns'
+    namespace: "{{ logstash_project }}"
+    kubeconfig: '{{ kubeconfig }}'
+    from_dir: '{{ tempdir }}/patterns.d/'
 
-#- name: "Deploy new Logstash"
-#  command: "oc deploy logstash --latest"
+

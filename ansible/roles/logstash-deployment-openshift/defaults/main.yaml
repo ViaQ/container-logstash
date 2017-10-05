@@ -1,0 +1,17 @@
+debug: ""
+logstash_image: "t0ffel/logstash"
+
+logstash_project: logstash-staging
+logstash_name: fedmsg
+production_elasticsearch: "http://elasticsearch.perf.lab.eng.bos.redhat.com:9280"
+staging_elasticsearch: "http://elasticsearch.perf.lab.eng.bos.redhat.com:80"
+
+# Index name prefixes for individual inputs
+index_shipshift: "jenkins-staging2-logs"
+index_collectd: "collectd"
+index_log4j: "logstash"
+index_lumberjack: "logstash"
+
+configs_dir: "{{ role_path }}/files/"
+# Define certs_dir to add certificates to the job
+# certs_dir: "{{ role_path }}/files/"

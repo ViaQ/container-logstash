@@ -3,7 +3,7 @@
   hosts: nodes
   roles:
   - role: logstash-deployment-openshift
-    debug: "true"
+#    debug: "true"
     logstash_project: centosci-kafka-mirror
     logstash_name: fedmsg
     configs_dir: "{{ role_path }}/files/"

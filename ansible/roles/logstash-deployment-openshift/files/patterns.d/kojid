@@ -1,0 +1,8 @@
+KOJID__PREFIX %{TIMESTAMP_ISO8601:timestamp} \[%{LOGLEVEL:level}\] %{JAVACLASS:[koji][action]}:
+KOJID_WAITING %{KOJID__PREFIX} %{GREEDYDATA:message}: {'waiting': %{WORD:[koji][waiting]}, 'id': %{NUMBER:[koji][taskid]}, 'weight': %{NUMBER:[koji][weight]}}
+KOJID_TASK    %{KOJID__PREFIX} Task %{NUMBER:[koji][taskid]} \(pid %{NUMBER:pid}\) %{GREEDYDATA:message} %{NUMBER:[koji][exitstatus]}
+KOJID_SUBSESS %{KOJID__PREFIX} %{GREEDYDATA:message} %{NUMBER:[koji][subsession]} \(task %{NUMBER:[koji][taskid]}\)
+KOJID_XML     %{KOJID__PREFIX} %{GREEDYDATA:message}: \"<\?xml version='1\.0'\?>\\n<methodResponse>\\n<params>\\n<param>\\n<value>%{GREEDYDATA:[koji][responsemsg]}
+KOJID_ATTEMPT %{KOJID__PREFIX} (?<message>Attempting to take task) %{NUMBER:[koji][taskid]}
+KOJID_MESSAGE %{KOJID__PREFIX} %{GREEDYDATA:message}
+KOJID_PIDS    %{KOJID__PREFIX} (?<message>pids:) \{%{GREEDYDATA:[koji][tasktopid]}, %{GREEDYDATA:[koji][tasktopid]}\}

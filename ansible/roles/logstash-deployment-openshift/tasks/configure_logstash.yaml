@@ -1,0 +1,41 @@
+---
+- name: Create temp directory for configs
+  file:
+    path: '{{ tempdir }}/conf.d/'
+    state: directory
+    mode: 0755
+
+- name: "Copy logstash client configs to the remote"
+  template:
+    src: '{{ item }}'
+    dest: '{{ tempdir }}/conf.d/'
+  with_fileglob:
+  - "{{ configs_dir }}/conf.d/*"
+  changed_when: no
+
+- name: Set Logstash client configmaps
+  oc_configmap:
+    state: present
+    name: '{{ logstash_name }}-logstash-config'
+    namespace: "{{ logstash_project }}"
+    kubeconfig: '{{ kubeconfig }}'
+    from_dir: '{{ tempdir }}/conf.d/'
+
+# Logstash patterns.d configmap
+- name: "Copy logstash patterns to the remote"
+  copy:
+    src: '{{ item }}'
+    dest: '{{ tempdir }}/patterns.d/'
+  with_fileglob:
+  - "{{ configs_dir }}/patterns.d/*"
+  changed_when: no
+
+- name: Set Logstash client patterns
+  oc_configmap:
+    state: present
+    name: '{{ logstash_name }}-logstash-patterns'
+    namespace: "{{ logstash_project }}"
+    kubeconfig: '{{ kubeconfig }}'
+    from_dir: '{{ tempdir }}/patterns.d/'
+
+

@@ -1,0 +1,14 @@
+GTIMESTAMP %{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{TIME}
+GMESSAGEID \[MSGID: %{INT:[glusterfs][msgid]}\]
+GSRCINFO \[%{NOTSPACE:[glusterfs][srcfile]}:%{INT:[glusterfs][linenum]}:%{NOTSPACE:[glusterfs][funcname]}\]
+
+GLOGMSGID \[%{GTIMESTAMP:timestamp}\] %{NOTSPACE:level}%{SPACE}%{GMESSAGEID}%{SPACE}%{GSRCINFO}%{SPACE}%{NOTSPACE:[glusterfs][subvol]}:%{SPACE}%{GREEDYDATA:message}
+GLOGNOMSGID \[%{GTIMESTAMP:timestamp}\] %{NOTSPACE:level} %{GSRCINFO} %{NOTSPACE:[glusterfs][subvol]}:%{SPACE}%{GREEDYDATA:message}
+GLOGREPEAT The message \"%{NOTSPACE:level}%{SPACE}%{GMESSAGEID}%{SPACE}%{GSRCINFO}%{SPACE}%{NOTSPACE:[glusterfs][subvol]}:%{SPACE}%{GREEDYDATA:message}\" repeated %{INT:[glusterfs][repeat_count]} times between \[%{GTIMESTAMP:timestamp}\] and \[%{GTIMESTAMP:[glusterfs][repeat_end]}\]
+
+GLUSTERSTACK \[%{GTIMESTAMP:timestamp}\] %{NOTSPACE:level} %{GSRCINFO} \((?'traceback'-->%{SPACE}?%{PATH}%{SPACE}?\(%{NOTSPACE}\) \[%{NOTSPACE}\](%{SPACE}|%{SPACE}\g'traceback'))%{SPACE}\)%{SPACE}%{GREEDYDATA:message}
+GLUSTERASSERT \[%{GTIMESTAMP:timestamp}\] %{NOTSPACE:level} %{GSRCINFO} \(--> %{INT}-%{NOTSPACE:[glusterfs][component]}?: %{GREEDYDATA:message}
+
+_GLUSTERGRAPHHEADER %{SPACE}?(\+-+\+|Final graph:)
+_GLUSTERGRAPH %{SPACE}?%{INT:[glusterfs][linenum]}: ((volume|type|option|end-volume)?%{GREEDYDATA})?
+GLUSTERVOLFILE (%{_GLUSTERGRAPHHEADER}|%{_GLUSTERGRAPH})

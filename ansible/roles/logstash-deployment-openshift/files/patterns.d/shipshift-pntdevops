@@ -1,0 +1,3 @@
+FAILURE_TYPE (distro|power)
+RESULT (success|failure|reject)
+AMB_MESSAGE project: amb, %{BASE10NUM:[ci_job][amb][ticket_id]} %{HOSTNAME:hostname} %{FAILURE_TYPE:[ci_job][amb][failure_type]} %{RESULT:[ci_job][amb][result]} %{WORD:[ci_job][amb][parameter]} %{BASE10NUM:[ci_job][amb][attempt_idx]}

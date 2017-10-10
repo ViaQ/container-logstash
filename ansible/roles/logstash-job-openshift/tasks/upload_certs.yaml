@@ -1,0 +1,49 @@
+---
+# This file assumes that certs_dir is defined and contains the certs and
+# private-keys subdirs with respective certificates and private keys.
+- name: "Copy logstash certs to the remote"
+  copy:
+    src: '{{ item }}'
+    dest: '{{ tempdir }}/'
+  with_fileglob:
+  - "{{ certs_dir }}/certs/*"
+  changed_when: no
+
+- name: Get cert file names
+  local_action: command='ls {{ certs_dir }}/certs/'
+  register: certs_ls_out
+
+- name: Set Logstash certs secret
+  oc_secret:
+    state: present
+    name: logstash-certs
+    namespace: "{{ logstash_project }}"
+    kubeconfig: '{{ kubeconfig }}'
+    files:
+    - name: '{{ item }}'
+      path: '{{ tempdir }}/certs/{{ item }}'
+  with_items: '{{ certs_ls_out.stdout_lines }}'
+
+# Create cert keys secret for Logstash certs
+- name: "Copy logstash key certs to the remote"
+  copy:
+    src: '{{ item }}'
+    dest: '{{ tempdir }}/'
+  with_fileglob:
+  - "{{ certs_dir }}/private-keys/*"
+  changed_when: no
+
+- name: Get cert file names
+  local_action: command='ls {{ certs_dir }}/private-keys/'
+  register: keys_ls_out
+
+- name: Set Logstash certs secret
+  oc_secret:
+    state: present
+    name: logstash-certs-keys
+    namespace: "{{ logstash_project }}"
+    kubeconfig: '{{ kubeconfig }}'
+    contents:
+    - path: '{{ item }}'
+      data: '{{ tempdir }}/private-keys/{{ item }}'
+  with_items: '{{ keys_ls_out.stdout_lines }}'

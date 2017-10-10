@@ -1,0 +1,71 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ logstash_name }}-logstash
+  labels:
+    app: logstash
+    logstash-name: {{ logstash_name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+      logstash-name: {{ logstash_name }}
+  template:
+    metadata:
+      labels:
+        app: logstash
+        logstash-name: {{ logstash_name }}
+    spec:
+      containers:
+      - name: logstash
+        image: {{ logstash_image }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9600
+          initialDelaySeconds: 20
+          timeoutSeconds: 1
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 800m
+            memory: 1Gi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/logstash/conf.d
+          readOnly: true
+        - name: patterns
+          mountPath: /etc/logstash/patterns.d
+          readOnly: true
+        - name: queue
+          mountPath: /opt/queue
+{% if certs_dir is defined %}
+        - name: logstash-certs
+          mountPath: /etc/pki/tls/certs/
+        - name: logstash-certs-keys
+          mountPath: /etc/pki/tls/private/
+{% endif %}
+        env:
+        - name: "DEBUG_LOGSTASH"
+          value: "{{ debug }}"
+        - name: "INSTANCE_RAM"
+          value: "1G"
+      volumes:
+      - name: config
+        configMap:
+          name: {{ logstash_name }}-logstash-config
+      - name: patterns
+        configMap:
+          name: {{ logstash_name }}-logstash-patterns
+      - name: queue
+        persistentVolumeClaim:
+          claimName: {{ logstash_name }}-logstash-queue
+{% if certs_dir is defined %}
+      - name: logstash-certs
+        secret:
+          secretName: {{ logstash_name }}-logstash-certs
+      - name: logstash-certs-keys
+        secret:
+          secretName: {{ logstash_name }}-logstash-certs-keys
+{% endif %}

@@ -1,0 +1,8 @@
+ERRATA_TIMESTAMP %{NOTSPACE} %{NOTSPACE}
+ERRATA_DATESTAMP %{DAY} %{MONTH} %{MONTHDAY} %{TIME} %{ISO8601_TIMEZONE} %{YEAR}
+
+ERRATA_STARTED \[%{ERRATA_TIMESTAMP:timestamp_logged}\] %{NOTSPACE:level} \[%{NOTSPACE:context}\] (?<state>Started) %{NOTSPACE:method} \"%{NOTSPACE:url}\" for %{NOTSPACE:host} at %{ERRATA_DATESTAMP:timestamp}
+
+ERRATA_COMPLETED \[%{ERRATA_TIMESTAMP:timestamp_logged}\] %{NOTSPACE:level} \[%{NOTSPACE:context}\] (?<state>Completed) %{NOTSPACE:method} \"%{NOTSPACE:url}\" for %{NOTSPACE:host} at %{ERRATA_DATESTAMP:timestamp} \(time: %{NUMBER:time}, status: %{NUMBER:status}\)
+
+ERRATA_PARAMETERS \[%{ERRATA_TIMESTAMP:timestamp}\] %{NOTSPACE:level} \[%{NOTSPACE:context}\] Parameters: %{GREEDYDATA:parameters}

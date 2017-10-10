@@ -1,0 +1,52 @@
+---
+- fail:
+    msg: "logstash_project variable must be set to logstash namespace"
+  when: logstash_project is undefined
+
+# allow passing in a tempdir
+- name: Create temp directory for doing work in
+  command: mktemp -d /tmp/container-logstash-XXXXXX
+  register: mktemp
+  changed_when: False
+
+- set_fact:
+    tempdir: "{{ mktemp.stdout }}"
+
+# Set up PVC for persistent queue
+- name: "Copy Queue PVC declaration to the remote"
+  template:
+    src: queue.yaml.j2
+    dest: '{{ tempdir }}/logstash-queue.yaml'
+  changed_when: no
+
+- name: "Create Queue PVC"
+  shell: 'oc apply -f {{ tempdir }}/logstash-queue.yaml  -n {{ logstash_project }}'
+
+# Create configmaps for Logstash
+- name: Create configmaps from configs and patterns
+  include: "{{ role_path }}/tasks/configure_logstash.yaml"
+
+# Create secrets from Logstash certs
+- name: Use certificates
+  include: "{{ role_path }}/tasks/upload_certs.yaml"
+  when: certs_dir is defined
+
+- name: "Copy Logstash infrastructure template to the remote"
+  template:
+    src: '{{ item }}.j2'
+    dest: '{{ tempdir }}/{{ item }}'
+  with_items:
+  - logstash-service.yaml
+  - logstash-deployment.yaml
+
+- name: "Create Logstash infrastructure template"
+  shell: oc apply -f {{ tempdir }}/{{ item }}  -n {{ logstash_project }}
+  with_items:
+  - logstash-service.yaml
+  - logstash-deployment.yaml
+
+- name: Delete temp directory
+  file:
+    name: "{{ tempdir }}"
+    state: absent
+  changed_when: False
